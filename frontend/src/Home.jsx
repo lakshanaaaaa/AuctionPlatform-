@@ -4,10 +4,8 @@ import Navbar from './Navbar';
 const Home = () => {
   return (
     <>
-      <div className="bg-gray-100 min-h-screen">
-
+      <div className="bg-gray-300">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-16">
-
           <div className="max-w-xl">
             <h1 className="text-4xl font-semibold text-gray-900 leading-snug mb-4">
               Going once, going twice...<br />
@@ -18,7 +16,6 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Image */}
           <div className="w-[500px]">
             <img
               src="/homepic.jpg"
@@ -27,6 +24,10 @@ const Home = () => {
             />
           </div>
         </div>
+      </div>
+      <div className="bg-white py-20 px-3 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Explore Live Auctions</h2>
+        <p className="text-gray-600">Start bidding on your favorite items now!</p>
       </div>
     </>
   );

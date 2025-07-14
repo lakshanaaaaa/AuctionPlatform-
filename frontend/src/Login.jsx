@@ -11,14 +11,12 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [passwrd, setPasswrd] = useState('');
   const [message, setMessage] = useState({ text: '', type: '' });
-
   const navigate = useNavigate();
 
   const showMessage = (text, type) => {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: '', type: '' }), 4000);
   };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -55,7 +53,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <form onSubmit={handleLogin} className="bg-zinc-900 text-white p-8 rounded-xl shadow-md w-full max-w-sm">
-        
+
         {message.text && <Message text={message.text} type={message.type} />}
 
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
