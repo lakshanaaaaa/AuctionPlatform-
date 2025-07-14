@@ -1,19 +1,25 @@
-// src/firebase.js
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAlKFLOjhZMR-0YevVUX-Ewh8Za9lEHqcE",
-  authDomain: "thrift-d12f6.firebaseapp.com",
-  projectId: "thrift-d12f6",
-  storageBucket: "thrift-d12f6.appspot.com",
-  messagingSenderId: "453381930198",
-  appId: "1:453381930198:web:ed25c8ddcb94df51ca5d77",
-  measurementId: "G-V5DLD5N1BR"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-export { auth, provider };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="module">git
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyBb4e_LXealuZ0kZobj_0FZvBqVMBioOVQ",
+        authDomain: "auction-platform-bf8cd.firebaseapp.com",
+        projectId: "auction-platform-bf8cd",
+        storageBucket: "auction-platform-bf8cd.firebasestorage.app",
+        messagingSenderId: "183381411863",
+        appId: "1:183381411863:web:f7565f65362af1234bf452",
+        measurementId: "G-D8LB9559YT"
+    };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    </script>
+</body>
+</html>
