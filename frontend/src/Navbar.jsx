@@ -49,15 +49,17 @@ function Navbar() {
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <img
-                src={user.photoURL || "/default-profile.png"}
-                alt="profile"
+                src={user?.photoURL || "/default-profile.png"}
+                alt="Profile"
                 className="w-10 h-10 rounded-full border cursor-pointer"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                onError={() => console.log("⚠️ Image failed:", user?.photoURL)}
               />
+
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
                   <div className="px-4 py-2 border-b text-sm text-gray-700">
-                    {user.displayName || user.email}
+                    {user.displayName || user.email.split('@')[0]}
                   </div>
                   <button
                     onClick={handleLogout}
