@@ -1,4 +1,5 @@
 import React from 'react';
+
 const Signup = () => {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -36,4 +37,4 @@ const Signup = () => {
   );
 };
 
-export default Signup
+export default Signup 
