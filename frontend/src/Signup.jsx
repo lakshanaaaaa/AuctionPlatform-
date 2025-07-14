@@ -1,35 +1,54 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from './firebase';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import { auth } from './firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [passwrd, setPasswrd] = useState('');
+  const [message, setMessage] = useState({ text: '', type: '' });
+
   const navigate = useNavigate();
 
-  // Handle email/password signup
+  const showMessage = (text, type) => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage({ text: '', type: '' }), 4000); // Auto-dismiss after 4s
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email.trim(), passwrd);
-      alert("✅ Account created!");
-      navigate('/');
+      showMessage('✅ Account created!', 'success');
+      setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      alert("❌ Signup failed: " + error.message);
+      showMessage('❌ Signup failed: ' + error.message, 'error');
     }
   };
 
-  // Handle Google signup
   const handleGoogleSignup = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      alert("✅ Signed up with Google!");
-      navigate('/');
+      showMessage('✅ Signed up with Google!', 'success');
+      setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      alert("❌ Google signup failed: " + error.message);
+      showMessage('❌ Google signup failed: ' + error.message, 'error');
     }
+  };
+
+  // Inline Message Component
+  const Message = ({ type, text }) => {
+    const color = type === 'success' ? 'bg-green-600' : 'bg-red-600';
+    return (
+      <div className={`mb-4 text-white px-4 py-2 rounded-md ${color}`}>
+        {text}
+      </div>
+    );
   };
 
   return (
@@ -38,6 +57,8 @@ const Signup = () => {
         onSubmit={handleSignup}
         className="bg-zinc-900 text-white p-8 rounded-xl shadow-md w-full max-w-sm"
       >
+        {message.text && <Message text={message.text} type={message.type} />}
+
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
 
         <div className="mb-4">
@@ -71,7 +92,6 @@ const Signup = () => {
           Sign up
         </button>
 
-        {/* Google Signup */}
         <button
           type="button"
           onClick={handleGoogleSignup}
