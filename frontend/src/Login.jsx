@@ -1,22 +1,23 @@
 // src/components/Login.jsx
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from './firebase'; // ✅ Your existing firebase.js
+import { auth } from './firebase';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [passwrd, setPasswrd] = useState('');
+  const [message, setMessage] = useState({ text: '', type: '' });
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email.trim(), passwrd);
-      alert("✅ Login successful!");
-      navigate('/');
+      setMessage({ text: '✅ Login successful!', type: 'success' });
+      setTimeout(() => navigate('/'), 2000);
     } catch (error) {
-      alert("❌ Login failed: " + error.message);
+      setMessage({ text: '❌ Login failed: ' + error.message, type: 'error' });
     }
   };
 
@@ -25,17 +26,16 @@ const Login = () => {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      alert("✅ Logged in with Google!");
-      navigate('/');
+      setMessage({ text: '✅ Logged in with Google!', type: 'success' });
+      setTimeout(() => navigate('/'), 2000);
     } catch (error) {
-      alert("❌ Google login failed: " + error.message);
+      setMessage({ text: '❌ Google login failed: ' + error.message, type: 'error' });
     }
   };
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <form onSubmit={handleLogin} className="bg-zinc-900 text-white p-8 rounded-xl shadow-md w-full max-w-sm">
-
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
 
         <div className="mb-4">
@@ -71,6 +71,14 @@ const Login = () => {
         >
           Login
         </button>
+
+        {message.text && (
+          <div className={`my-3 text-sm text-center px-3 py-2 rounded-md ${
+            message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {message.text}
+          </div>
+        )}
 
         <button
           onClick={handleGoogleLogin}
