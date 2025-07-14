@@ -4,6 +4,7 @@ import './index.css'
 import App from './App'
 import Home from './Home'; 
 import Login from './Login'
+import Signup from './Signup';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 

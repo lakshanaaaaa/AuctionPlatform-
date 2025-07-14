@@ -1,13 +1,10 @@
 import React from 'react';
-import Signup from './Signup';
-import { Link } from 'react-router-dom';
-
-const Login = () => {
+const Signup = () => {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <form className="bg-zinc-900 text-white p-8 rounded-xl shadow-md w-full max-w-sm">
         
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">Signup</h2>
 
         <div className="mb-4">
           <label className="block text-sm text-gray-400 mb-1" htmlFor="email">Email</label>
@@ -20,7 +17,6 @@ const Login = () => {
         <div className="mb-4">
           <div className="flex justify-between items-center mb-1">
             <label className="block text-sm text-gray-400" htmlFor="password">Password</label>
-            <a href="#" className="text-xs text-gray-400 hover:underline">Forgot password?</a>
           </div>
           <input
             type="password"
@@ -33,14 +29,11 @@ const Login = () => {
           type="submit"
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-md transition"
         >
-          Login
+          Sign up
         </button>
-        <p className="text-center text-sm text-gray-400 mt-4">
-          Don’t have an account? <Link to="/signup" className="text-white underline">Sign up</Link>
-        </p>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Signup

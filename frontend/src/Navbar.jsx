@@ -1,33 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-function Navbar(){
-    return(
-        <nav>
-            <div className="text-black bg-gray-300 flex w-full h-20  justify-between items-center text-xl font-sans font-bold">
-              <img src="/newlogo.png" alt="Logo" className="h-30 pt-2" />
-            <div className="flex gap-x-6 flex-end pr-5">
-            <Link to="/" className="text-black">Home</Link>
-        <Link to="/login" className="text-black">Login</Link>
-            <Link to="/"><svg
-  className="w-8 h-8 text-black"
-  aria-hidden="true"
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  viewBox="0 0 24 24"
->
-  <path
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
-  />
-</svg>
-</Link>
-            </div>
-            </div>
-        </nav>
-    )
+
+function Navbar() {
+  return (
+    <nav className="bg-gray-100 text-gray-900 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-20">
+    
+        <div className="flex items-center">
+          <img src="/newlogo.png" alt="Logo" className="h-10 " />
+          <span className="font-bold text-xl">AUCTION</span>
+        </div>
+
+        <div className="flex items-center gap-6 text-xl font-bold">
+          <Link to="/" className="hover:text-sky-600 transition">Home</Link>
+          <Link to="/login" className="hover:text-sky-600 transition">Login</Link>
+          <Link to="/" className="hover:text-sky-600 transition">
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 4h1.5L9 16h8a2 2 0 100 4 2 2 0 000-4H9a2 2 0 100 4 2 2 0 000-4H5l-.5-3h13.25L19 7H7.312"
+              />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
 }
 
-export default Navbar
+export default Navbar;
