@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaArrowRight } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+
 
 const Home = () => {
   return (
@@ -38,13 +40,13 @@ const Home = () => {
   <img src="/demopic4.jpg" alt="" className="col-span-1 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
 </div>
 <div className="flex items-center hover:scale-110 duration-500 transition-transform">
-  <a
-    href=""
+  <Link
+    to="/sell"
     className="h-15 w-70 bg-black flex items-center justify-between px-6 py-3 rounded text-white"
   >
     <span className='text-xl font-bold'>Enter Auction</span>
     <FaArrowRight className="text-xl" /> {/* You can increase text-xl to 2xl or 3xl if needed */}
-  </a>
+  </Link>
 </div>
     </div>
 
