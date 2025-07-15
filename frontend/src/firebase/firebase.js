@@ -1,10 +1,6 @@
-// src/firebase.js
-
-// Import Firebase modules
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-// Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBb4e_LXealuZ0kZobj_0FZvBqVMBioOVQ",
   authDomain: "auction-platform-bf8cd.firebaseapp.com",
@@ -15,14 +11,7 @@ const firebaseConfig = {
   measurementId: "G-D8LB9559YT"
 };
 
-// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Authentication
 const auth = getAuth(app);
-
-// Initialize Google Auth Provider
 const googleProvider = new GoogleAuthProvider();
-
-// Export auth and provider
 export { auth, googleProvider };

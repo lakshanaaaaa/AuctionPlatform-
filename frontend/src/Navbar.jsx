@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from './firebase';
+import { auth } from './firebase/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 function Navbar() {
@@ -30,19 +30,18 @@ function Navbar() {
   const handleLogout = async () => {
     await signOut(auth);
     alert("🔓 Logged out");
-    navigate('/login');
+    navigate('/login'); // Redirect after logout
   };
 
   return (
-    <nav className="bg-gray-300 text-gray-900 shadow-sm">
+    <nav className="bg-gray-100 text-gray-900 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-20">
-        {/* Logo and title */}
+
         <div className="flex items-center">
           <img src="/newlogo.png" alt="Logo" className="h-10 mr-2" />
           <span className="font-bold text-xl">AUCTION</span>
         </div>
 
-        {/* Navigation + Profile/Login */}
         <div className="flex items-center gap-6 text-xl font-bold relative">
           <Link to="/" className="hover:text-sky-600 transition">Home</Link>
 
