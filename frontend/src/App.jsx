@@ -4,10 +4,11 @@ import Navbar from './Navbar';
 import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
+import Form from './Form';
 
 function App() {
     const location = useLocation()
-    const hideNavbarOnRoutes = ['/login','/signup']
+    const hideNavbarOnRoutes = ['/login','/signup','/form']
     const shouldShowNavbar = !hideNavbarOnRoutes.includes(location.pathname)
 
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} /> 
          <Route path="/signup" element={<Signup />} />
+         <Route path="/form" element={<Form />} />
       </Routes>
     </>
   );
