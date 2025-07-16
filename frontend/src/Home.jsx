@@ -26,29 +26,31 @@ const Home = () => {
           </div>
         </div>
       </div>
+
       <div className="bg-white py-20 px-3 max-w-6xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Explore Live Auctions</h2>
         <p className="text-gray-600">Start bidding on your favorite items now!</p>
       </div>
-      {/* products demo */}
-<div className='flex '>
-      <div className="grid grid-cols-4 grid-rows-2 gap-2 w-[800px] h-[500px] mx-40 overflow-hidden rounded-lg ">
-  <img src="/demopic3.jpg" alt="" className="col-span-2 row-span-2 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
-  <img src="/demopicn.jpg" alt="" className="col-span-2 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
-  <img src="/demopic1.jpg" alt="" className="col-span-1 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
-  <img src="/demopic4.jpg" alt="" className="col-span-1 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
-</div>
-<div className="flex items-center">
-  <Link
-    to="/product"
-    className="rounded-full h-15 w-70 bg-black flex items-center justify-between px-6 py-3 text-white hover:scale-110 duration-500 transition-transform"
-  >
-    <span className="text-xl font-bold">Enter Auction</span>
-    <FaArrowRight className="text-2xl" />
-  </Link>
-</div>
-    </div>
 
+      {/* products demo */}
+      <div className="flex">
+        <div className="grid grid-cols-4 grid-rows-2 gap-2 w-[800px] h-[500px] mx-40 overflow-hidden rounded-lg">
+          <img src="/demopic3.jpg" alt="" className="col-span-2 row-span-2 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
+          <img src="/demopicn.jpg" alt="" className="col-span-2 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
+          <img src="/demopic1.jpg" alt="" className="col-span-1 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
+          <img src="/demopic4.jpg" alt="" className="col-span-1 row-span-1 object-cover w-full h-full rounded hover:scale-110 duration-500 transition-transform" />
+        </div>
+
+        <div className="flex items-center hover:scale-110 duration-500 transition-transform ml-6">
+          <Link
+            to="/product"
+            className="rounded-full h-15 w-70 bg-black flex items-center justify-between px-6 py-3 text-white"
+          >
+            <span className="text-xl font-bold">Enter Auction</span>
+            <FaArrowRight className="text-2xl" />
+          </Link>
+        </div>
+      </div>
     </>
   );
 };
