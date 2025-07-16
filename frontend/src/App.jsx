@@ -8,10 +8,9 @@ import Form from './Form';
 import Product from './Product';
 import Sell from './Sell';
 
-// Wrapper component to access location
 function App() {
   const location = useLocation();
-  const hideNavbarOnRoutes = ['/login', '/signup', '/form'];
+  const hideNavbarOnRoutes = ['/login','/signup','/form'];
   const shouldShowNavbar = !hideNavbarOnRoutes.includes(location.pathname);
 
   return (
