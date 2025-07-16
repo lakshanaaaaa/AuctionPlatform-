@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-const CountdownTimer = ({ initialMinutes, initialSeconds }) => {
-  const [minutes, setMinutes] = useState(initialMinutes);
-  const [seconds, setSeconds] = useState(initialSeconds);
+const CountdownTimer = ({ initialMinutes = 60, initialSeconds = 0 }) => {
+  const [time, setTime] = useState(() => {
+    return initialMinutes * 60 + initialSeconds;
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds((prev) => prev - 1);
-      } else {
-        if (minutes === 0) {
-          clearInterval(timer);
-        } else {
-          setMinutes((prev) => prev - 1);
-          setSeconds(59);
-        }
-      }
+      setTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [minutes, seconds]);
+  }, []);
+
+  const formatTime = (totalSeconds) => {
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    return [
+      hrs.toString().padStart(2, "0"),
+      mins.toString().padStart(2, "0"),
+      secs.toString().padStart(2, "0"),
+    ].join(":");
+  };
 
   return (
-    <div className="text-red-600 font-semibold">
-      {minutes === 0 && seconds === 0
-        ? "Auction Ended"
-        : `${minutes.toString().padStart(2, "0")}:${seconds
-            .toString()
-            .padStart(2, "0")}`}
-    </div>
+    <p className="text-gray-700 font-mono font-semibold mt-2">
+      ⏳ Time Left: {formatTime(time)}
+    </p>
   );
 };
 

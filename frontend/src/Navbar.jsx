@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from './firebase/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Form from './Form';
+import { IoMdAdd } from "react-icons/io";
 
 function Navbar() {
   const [user, setUser] = useState(null);
@@ -82,7 +83,15 @@ function Navbar() {
               />
             </svg>
           </Link>
-          <Link to="/form">Seller</Link>
+<Link
+  to="/form"
+  className="flex items-center justify-center gap-2 w-32 py-2 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold hover:from-emerald-600 hover:to-blue-600 transition duration-300 shadow-lg"
+>
+  Sell
+</Link>
+
+
+
         </div>
       </div>
     </nav>
