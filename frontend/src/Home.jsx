@@ -41,11 +41,11 @@ const Home = () => {
 </div>
 <div className="flex items-center hover:scale-110 duration-500 transition-transform">
   <Link
-    to="/sell"
+    to="#"
     className="h-15 w-70 bg-black flex items-center justify-between px-6 py-3 rounded text-white"
   >
     <span className='text-xl font-bold'>Enter Auction</span>
-    <FaArrowRight className="text-xl" /> {/* You can increase text-xl to 2xl or 3xl if needed */}
+    <FaArrowRight className="text-xl" />
   </Link>
 </div>
     </div>
