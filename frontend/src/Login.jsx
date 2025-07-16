@@ -87,7 +87,7 @@ const Login = () => {
 
         <button
           type="submit"
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-md transition"
+          className="w-full bg-emerald-800 hover:bg-emerald-700 text-white font-bold py-2 rounded-md transition"
         >
           Login
         </button>
@@ -95,7 +95,7 @@ const Login = () => {
      <button
           type="button"
           onClick={handleGoogleLogin}
-          className="mt-3 w-full bg-white hover:bg-blue-400 text-black font-bold py-2 rounded-md transition flex items-center justify-center gap-2"
+          className="mt-3 w-full bg-white hover:scale-110 duration-300 transition-transfrom text-black font-bold py-2 rounded-md transition flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -115,7 +115,7 @@ const Login = () => {
               d="M272 107.7c37.3 0 70.9 12.8 97.3 38.1l73.1-73.1C403.6 27.6 344.2 0 272 0 170.6 0 80.1 57.8 35.9 167.3l87.9 68.6c20.9-62.6 79.3-109.1 148.2-109.1z"
             />
           </svg>
-          Sign up with Google
+          Sign in
         </button>
 
         <p className="text-center text-sm text-gray-400 mt-4">
