@@ -1,8 +1,9 @@
 // src/components/Navbar.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from './firebase/firebase';
+import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import Form from './Form';
 
 function Navbar() {
   const [user, setUser] = useState(null);
@@ -43,7 +44,7 @@ function Navbar() {
         </div>
 
         <div className="flex items-center gap-6 text-xl font-bold relative">
-          <Link to="/" className="hover:text-sky-600 transition">Home</Link>
+          <Link to="/" className="hover:text-red-600 transition">Home</Link>
 
           {user ? (
             <div className="relative" ref={dropdownRef}>
@@ -70,10 +71,10 @@ function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="hover:text-sky-600 transition">Login</Link>
+            <Link to="/login" className="hover:text-red-600 transition">Login</Link>
           )}
 
-          <Link to="/" className="hover:text-sky-600 transition">
+          <Link to="/" className="hover:text-red-600 transition">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -83,6 +84,7 @@ function Navbar() {
               />
             </svg>
           </Link>
+          <Link to="/form">Seller</Link>
         </div>
       </div>
     </nav>
