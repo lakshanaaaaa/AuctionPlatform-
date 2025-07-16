@@ -1,75 +1,89 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase/firebase";
 import CountdownTimer from "./CountdownTimer";
 
 function Product() {
-  const initialProducts = [
+  const defaultProducts = [
     {
+      id: "default1",
       title: "EUREKA",
       description: "Rare vintage piece from 1800s.",
       image: "/antique1.jpg",
       bid: 3000,
     },
     {
+      id: "default2",
       title: "Antique Toy",
       description: "Classic toy from the 70s.",
       image: "/toy1.jpg",
       bid: 1500,
     },
     {
+      id: "default3",
       title: "Historic Coin",
       description: "Pre-independence era coin.",
       image: "/coin1.jpg",
       bid: 800,
     },
     {
+      id: "default4",
       title: "War Sword",
       description: "Handcrafted medieval sword.",
       image: "/sword2.jpg",
       bid: 7500,
     },
     {
+      id: "default5",
       title: "Old Vase",
       description: "Royal antique ceramic vase.",
       image: "/antique2.jpg",
       bid: 2000,
     },
     {
+      id: "default6",
       title: "Vintage Toy Car",
       description: "Limited edition model.",
       image: "/toy3.jpg",
       bid: 1200,
     },
     {
+      id: "default7",
       title: "Silver Coin",
       description: "Ancient silver currency.",
       image: "/coin2.jpg",
       bid: 950,
     },
     {
+      id: "default8",
       title: "Antique Phone",
       description: "Retro dialer in mint condition.",
       image: "/antique3.jpg",
       bid: 2700,
     },
     {
+      id: "default9",
       title: "Wooden Toy",
       description: "Hand-carved toy from Kerala.",
       image: "/toy2.jpg",
       bid: 1000,
     },
     {
+      id: "default10",
       title: "Bronze Coin",
       description: "From ancient temple discovery.",
       image: "/coin3.jpg",
       bid: 1100,
     },
     {
+      id: "default11",
       title: "Decorative Sword",
       description: "Wall decor piece, engraved.",
       image: "/sword1.jpg",
       bid: 3500,
     },
     {
+      id: "default12",
       title: "Royal Sword",
       description: "Used by nobles in 1600s.",
       image: "/sword3.jpg",
@@ -77,8 +91,27 @@ function Product() {
     },
   ];
 
-  const [products, setProducts] = useState(initialProducts);
-  const [bids, setBids] = useState(Array(initialProducts.length).fill(""));
+  const [products, setProducts] = useState(defaultProducts);
+  const [bids, setBids] = useState([]);
+
+  useEffect(() => {
+    const fetchFirestoreProducts = async () => {
+      const snapshot = await getDocs(collection(db, "auctions"));
+      const firestoreProducts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        title: doc.data().title,
+        description: doc.data().description,
+        image: doc.data().imageURL,
+        bid: doc.data().currentBid || doc.data().startBid,
+      }));
+
+      const merged = [...defaultProducts, ...firestoreProducts];
+      setProducts(merged);
+      setBids(Array(merged.length).fill(""));
+    };
+
+    fetchFirestoreProducts();
+  }, []);
 
   const handleBidChange = (value, i) => {
     const updated = [...bids];
@@ -106,7 +139,7 @@ function Product() {
     <div className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       {products.map((product, i) => (
         <div
-          key={i}
+          key={product.id || i}
           className="relative group bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300"
         >
           {/* Extra description (appears above image on hover) */}
@@ -128,7 +161,7 @@ function Product() {
             <input
               type="number"
               placeholder="Enter your bid"
-              value={bids[i]}
+              value={bids[i] || ""}
               onChange={(e) => handleBidChange(e.target.value, i)}
               className="mb-2 w-full px-3 py-1 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
