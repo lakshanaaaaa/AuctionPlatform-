@@ -87,7 +87,7 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-md transition mb-3"
+          className="w-full bg-emerald-800 hover:bg-emerald-700 text-white font-bold py-2 rounded-md transition mb-3"
         >
           Sign up
         </button>
@@ -95,7 +95,7 @@ const Signup = () => {
         <button
           type="button"
           onClick={handleGoogleSignup}
-          className="w-full bg-white hover:bg-blue-400 text-black font-bold py-2 rounded-md transition flex items-center justify-center gap-2"
+          className="w-full bg-white hover:scale-110 duration-300 transition-transfrom text-black font-bold py-2 rounded-md transition flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
             <path

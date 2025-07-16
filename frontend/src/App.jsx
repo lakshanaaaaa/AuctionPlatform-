@@ -5,6 +5,7 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Form from './Form';
+import Product from './Product';
 
 function App() {
     const location = useLocation()
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} /> 
          <Route path="/signup" element={<Signup />} />
          <Route path="/form" element={<Form />} />
+         <Route path="/product" element={<Product />} />
       </Routes>
     </>
   );

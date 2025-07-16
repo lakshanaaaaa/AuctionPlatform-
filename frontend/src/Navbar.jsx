@@ -44,7 +44,7 @@ function Navbar() {
         </div>
 
         <div className="flex items-center gap-6 text-xl font-bold relative">
-          <Link to="/" className="hover:text-sky-600 transition">Home</Link>
+          <Link to="/" className="hover:text-red-600 transition">Home</Link>
 
           {user ? (
             <div className="relative" ref={dropdownRef}>
@@ -69,10 +69,10 @@ function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="hover:text-sky-600 transition">Login</Link>
+            <Link to="/login" className="hover:text-red-600 transition">Login</Link>
           )}
 
-          <Link to="/" className="hover:text-sky-600 transition">
+          <Link to="/" className="hover:text-red-600 transition">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
