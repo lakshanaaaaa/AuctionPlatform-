@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db, auth } from "./firebase"; // ✅ correct
+import { db, auth } from './firebase/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 
 const Form = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [imageURL, setImageURL] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [startBid, setStartBid] = useState('');
   const [duration, setDuration] = useState(60);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
     if (!user) return alert('You must be logged in to add products.');
+    if (!imageFile) return alert('Please select an image file.');
 
     try {
+      // ✅ Upload to Cloudinary
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      formData.append('upload_preset', 'auction_unsigned_preset'); // your preset
+      formData.append('folder', 'auctions'); // your folder
+
+      const cloudRes = await axios.post(
+        'https://api.cloudinary.com/v1_1/dw5z7d8f1/image/upload',
+        formData
+      );
+
+      const imageURL = cloudRes.data.secure_url;
+
       const endTime = Timestamp.fromDate(new Date(Date.now() + duration * 60000));
 
       await addDoc(collection(db, 'auctions'), {
@@ -34,23 +52,21 @@ const Form = () => {
         createdBy: user.uid,
       });
 
-      // Reset form
       setTitle('');
       setDescription('');
-      setImageURL('');
+      setImageFile(null);
       setStartBid('');
       setDuration(60);
-
       alert('Auction item added!');
-      navigate('/sell'); // ✅ 3. Navigate to product page
-
+      navigate('/product');
     } catch (error) {
-      console.error("Error adding document: ", error);
-      alert('Something went wrong. Check console.');
+      console.error('Upload or Firestore error:', error);
+      setErrorMsg('Upload failed. Check console for details.');
     }
   };
 
   return (
+    <div className='bg-black h-max'>
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white shadow-md rounded-xl space-y-4">
       <h2 className="text-xl font-bold">Add Auction Product</h2>
 
@@ -71,13 +87,14 @@ const Form = () => {
         className="w-full p-2 border rounded"
       />
       <input
-        type="url"
-        placeholder="Image URL"
-        value={imageURL}
-        onChange={(e) => setImageURL(e.target.value)}
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImageFile(e.target.files[0])}
         required
         className="w-full p-2 border rounded"
       />
+      {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+
       <input
         type="number"
         placeholder="Starting Bid"
@@ -97,6 +114,7 @@ const Form = () => {
         Submit Auction
       </button>
     </form>
+    </div>
   );
 };
 
