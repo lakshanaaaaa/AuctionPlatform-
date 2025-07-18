@@ -24,11 +24,10 @@ const Form = () => {
     if (!imageFile) return alert('Please select an image file.');
 
     try {
-      // ✅ Upload to Cloudinary
       const formData = new FormData();
       formData.append('file', imageFile);
-      formData.append('upload_preset', 'auction_unsigned_preset'); // your preset
-      formData.append('folder', 'auctions'); // your folder
+      formData.append('upload_preset', 'auction_unsigned_preset');
+      formData.append('folder', 'auctions');
 
       const cloudRes = await axios.post(
         'https://api.cloudinary.com/v1_1/dw5z7d8f1/image/upload',
@@ -36,7 +35,6 @@ const Form = () => {
       );
 
       const imageURL = cloudRes.data.secure_url;
-
       const endTime = Timestamp.fromDate(new Date(Date.now() + duration * 60000));
 
       await addDoc(collection(db, 'auctions'), {
@@ -66,53 +64,66 @@ const Form = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white shadow-md rounded-xl space-y-4">
-      <h2 className="text-xl font-bold">Add Auction Product</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-lg bg-white p-8 rounded-2xl shadow-lg space-y-6"
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          🛍️ Add Auction Product
+        </h2>
 
-      <input
-        type="text"
-        placeholder="Product Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="text"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImageFile(e.target.files[0])}
-        required
-        className="w-full p-2 border rounded"
-      />
-      {errorMsg && <p className="text-red-600 text-sm">{errorMsg}</p>}
+        <input
+          type="text"
+          placeholder="Product Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
+        <textarea
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          rows="3"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        ></textarea>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+        />
 
-      <input
-        type="number"
-        placeholder="Starting Bid"
-        value={startBid}
-        onChange={(e) => setStartBid(e.target.value)}
-        required
-        className="w-full p-2 border rounded"
-      />
-      <input
-        type="number"
-        placeholder="Duration (minutes)"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Submit Auction
-      </button>
-    </form>
+        {errorMsg && (
+          <p className="text-red-600 text-sm text-center">{errorMsg}</p>
+        )}
+
+        <input
+          type="number"
+          placeholder="Starting Bid (₹)"
+          value={startBid}
+          onChange={(e) => setStartBid(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
+        <input
+          type="number"
+          placeholder="Duration (minutes)"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
+        <button
+          type="submit"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg transition-all duration-300"
+        >
+          Submit Auction
+        </button>
+      </form>
+    </div>
   );
 };
 
