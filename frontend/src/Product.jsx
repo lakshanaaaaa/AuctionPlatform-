@@ -140,13 +140,11 @@ function Product() {
       {products.map((product, i) => (
         <div
           key={product.id || i}
-          className="relative group bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300"
-        >
+          className="relative group bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300">
           {/* Extra description (appears above image on hover) */}
           <div className="absolute top-2 left-2 right-2 text-sm text-white bg-black bg-opacity-70 rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
             <p>🔍 Exclusive collectible item. Don’t miss it!</p>
           </div>
-
           {/* Image */}
           <div className="overflow-hidden">
             <img
@@ -155,7 +153,6 @@ function Product() {
               className="w-full h-60 object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-110"
             />
           </div>
-
           {/* Bid form (appears below image on hover) */}
           <div className="px-4 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <input
@@ -172,7 +169,6 @@ function Product() {
               Submit Bid
             </button>
           </div>
-
           {/* Always visible product details */}
           <div className="p-4">
             <h3 className="text-lg font-bold text-gray-800 mb-1">
@@ -189,5 +185,4 @@ function Product() {
     </div>
   );
 }
-
 export default Product;

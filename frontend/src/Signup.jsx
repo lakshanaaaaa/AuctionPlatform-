@@ -16,7 +16,7 @@ const Signup = () => {
 
   const showMessage = (text, type) => {
     setMessage({ text, type });
-    setTimeout(() => setMessage({ text: '', type: '' }), 4000); // Auto-dismiss after 4s
+    setTimeout(() => setMessage({ text: '', type: '' }), 3000); // Auto-dismiss after 4s
   };
 
   const handleSignup = async (e) => {
