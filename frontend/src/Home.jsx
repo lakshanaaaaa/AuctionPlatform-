@@ -45,8 +45,7 @@ const Home = () => {
         <div className="flex items-center hover:scale-110 duration-500 transition-transform ml-6">
           <Link
             to="/product"
-            className="rounded-full h-15 w-70 bg-black flex items-center justify-between px-6 py-3 text-white"
-          >
+            className="rounded-full h-15 w-70 bg-black flex items-center justify-between px-6 py-3 text-white">
             <span className="text-xl font-bold">Enter Auction</span>
             <FaArrowRight className="text-2xl" />
           </Link>

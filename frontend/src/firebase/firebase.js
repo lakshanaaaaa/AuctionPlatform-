@@ -5,14 +5,15 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage'; // ✅ Add this
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBb4e_LXealuZ0kZobj_0FZvBqVMBioOVQ",
-  authDomain: "auction-platform-bf8cd.firebaseapp.com",
-  projectId: "auction-platform-bf8cd",
-  storageBucket: "auction-platform-bf8cd.appspot.com",
-  messagingSenderId: "183381411863",
-  appId: "1:183381411863:web:f7565f65362af1234bf452",
-  measurementId: "G-D8LB9559YT"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
 
 const app = initializeApp(firebaseConfig);
 
