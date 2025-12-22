@@ -52,7 +52,7 @@ const CountdownTimer = ({ initialMinutes = 60, initialSeconds = 0, isDefault = f
   };
 
   return (
-    <p className="text-gray-700 font-mono font-semibold mt-2">
+    <p className="text-slate-600 font-mono font-semibold mt-2">
       ⏳ Time Left: {formatTime(time)}
     </p>
   );
