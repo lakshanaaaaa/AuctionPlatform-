@@ -16,6 +16,8 @@ const Form = () => {
   const [startBid, setStartBid] = useState('');
   const [reservePrice, setReservePrice] = useState('');
   const [duration, setDuration] = useState(60);
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [shippingInfo, setShippingInfo] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +59,23 @@ const Form = () => {
       );
 
       const imageURL = cloudRes.data.secure_url;
-      const endTime = Timestamp.fromDate(new Date(Date.now() + duration * 60000));
+      const now = new Date();
+      let auctionEndTime;
+      
+      if (endDate && endTime) {
+        // Use custom date/time if provided
+        auctionEndTime = new Date(`${endDate}T${endTime}`);
+        if (auctionEndTime <= now) {
+          setErrorMsg('End date and time must be in the future.');
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        // Use duration if no custom date/time
+        auctionEndTime = new Date(now.getTime() + duration * 60000);
+      }
+      
+      const endTimeTimestamp = Timestamp.fromDate(auctionEndTime);
 
       await addDoc(collection(db, 'auctions'), {
         title,
@@ -70,7 +88,7 @@ const Form = () => {
         currentBid: Number(startBid),
         currentBidder: '',
         bidCount: 0,
-        endTime,
+        endTime: endTimeTimestamp,
         shippingInfo,
         status: 'active',
         createdBy: user.uid,
@@ -86,6 +104,8 @@ const Form = () => {
       setStartBid('');
       setReservePrice('');
       setDuration(60);
+      setEndDate('');
+      setEndTime('');
       setShippingInfo('');
       
       setShowSuccess(true);
@@ -104,225 +124,324 @@ const Form = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-slate-50 py-12 px-4">
+      <div className="min-h-screen bg-gray-800 py-8 px-4">
         {showSuccess && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Success!</h3>
-              <p className="text-slate-600">Your item has been listed for auction. Redirecting to products...</p>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Listing Created Successfully!</h3>
+              <p className="text-slate-600">Your auction is now live. Redirecting to view your listing...</p>
             </div>
           </div>
         )}
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-          {/* Header */}
-          <div className="bg-slate-800 px-8 py-6">
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Upload className="w-8 h-8" />
-              List Your Item for Auction
-            </h1>
-            <p className="text-slate-300 mt-2">Fill out the details below to create your auction listing</p>
+        
+        <div className="max-w-5xl mx-auto">
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Sell Your Item</h1>
+            <p className="text-gray-300">Create a professional auction listing to reach thousands of potential buyers</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-8">
-            {/* Item Details Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-slate-800 border-b border-slate-200 pb-2">Item Information</h3>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                    <Tag className="w-4 h-4" /> Item Title *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., Vintage Rolex Watch, Antique Vase..."
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Main Form */}
+            <div className="lg:col-span-2">
+              <div className="bg-gray-700 rounded-lg shadow-sm border border-gray-600">
+                <form onSubmit={handleSubmit} className="p-6 space-y-8">
+                  {/* Basic Information */}
+                  <div className="space-y-6">
+                    <div className="border-b border-gray-600 pb-4">
+                      <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                        <Tag className="w-5 h-5" />
+                        Item Details
+                      </h2>
+                      <p className="text-sm text-gray-300 mt-1">Provide accurate information about your item</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Item Title *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Vintage Rolex Submariner Watch"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          required
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Category *</label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select a category</option>
-                    <option value="antiques">Antiques & Collectibles</option>
-                    <option value="art">Art & Paintings</option>
-                    <option value="jewelry">Jewelry & Watches</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="furniture">Furniture</option>
-                    <option value="books">Books & Manuscripts</option>
-                    <option value="coins">Coins & Currency</option>
-                    <option value="toys">Toys & Games</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Category *
+                        </label>
+                        <select
+                          value={category}
+                          onChange={(e) => setCategory(e.target.value)}
+                          required
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="">Select category</option>
+                          <option value="Antiques & Collectibles">Antiques & Collectibles</option>
+                          <option value="Art & Paintings">Art & Paintings</option>
+                          <option value="Jewelry & Watches">Jewelry & Watches</option>
+                          <option value="Electronics">Electronics</option>
+                          <option value="Furniture">Furniture</option>
+                          <option value="Books & Manuscripts">Books & Manuscripts</option>
+                          <option value="Coins & Currency">Coins & Currency</option>
+                          <option value="Toys & Games">Toys & Games</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
 
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                  <FileText className="w-4 h-4" /> Detailed Description *
-                </label>
-                <textarea
-                  placeholder="Describe your item's history, condition, unique features, provenance, etc. Be detailed to attract serious bidders."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                  rows="4"
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2">
+                        Item Condition *
+                      </label>
+                      <select
+                        value={condition}
+                        onChange={(e) => setCondition(e.target.value)}
+                        required
+                        className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Select condition</option>
+                        <option value="Mint">Mint - Perfect condition, like new</option>
+                        <option value="Excellent">Excellent - Minor signs of use</option>
+                        <option value="Good">Good - Some wear, fully functional</option>
+                        <option value="Fair">Fair - Noticeable wear but usable</option>
+                        <option value="Poor">Poor - Significant wear or damage</option>
+                      </select>
+                    </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Item Condition *</label>
-                <select
-                  value={condition}
-                  onChange={(e) => setCondition(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select condition</option>
-                  <option value="mint">Mint - Perfect condition</option>
-                  <option value="excellent">Excellent - Minor wear</option>
-                  <option value="good">Good - Some wear, fully functional</option>
-                  <option value="fair">Fair - Noticeable wear</option>
-                  <option value="poor">Poor - Significant wear/damage</option>
-                </select>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2">
+                        Description *
+                      </label>
+                      <textarea
+                        placeholder="Provide detailed information about your item including history, provenance, measurements, materials, and any flaws or repairs..."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                        rows="4"
+                        className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">Detailed descriptions attract more bidders and higher prices</p>
+                    </div>
+                  </div>
+
+                  {/* Photos */}
+                  <div className="space-y-6">
+                    <div className="border-b border-gray-600 pb-4">
+                      <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                        <Camera className="w-5 h-5" />
+                        Photos
+                      </h2>
+                      <p className="text-sm text-gray-300 mt-1">High-quality photos increase bidding activity</p>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2">
+                        Upload Images *
+                      </label>
+                      <div className="border-2 border-dashed border-gray-500 rounded-lg p-6 text-center hover:border-blue-400 transition-colors bg-gray-600">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setImageFile(e.target.files[0])}
+                          required
+                          className="w-full text-gray-200"
+                        />
+                        <p className="text-sm text-gray-400 mt-2">Upload clear, well-lit photos from multiple angles</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pricing & Duration */}
+                  <div className="space-y-6">
+                    <div className="border-b border-gray-600 pb-4">
+                      <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                        <DollarSign className="w-5 h-5" />
+                        Pricing & Duration
+                      </h2>
+                      <p className="text-sm text-gray-300 mt-1">Set competitive pricing to attract bidders</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Starting Bid (₹) *
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="1000"
+                          value={startBid}
+                          onChange={(e) => setStartBid(e.target.value)}
+                          required
+                          min="1"
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Lower starting bids often result in more bidding activity</p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Reserve Price (₹)
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Optional minimum price"
+                          value={reservePrice}
+                          onChange={(e) => setReservePrice(e.target.value)}
+                          min="1"
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Minimum price you'll accept (optional)</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2">
+                        Auction Duration (Quick Setup)
+                      </label>
+                      <select
+                        value={duration}
+                        onChange={(e) => setDuration(Number(e.target.value))}
+                        className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value={60}>1 Hour</option>
+                        <option value={180}>3 Hours</option>
+                        <option value={360}>6 Hours</option>
+                        <option value={720}>12 Hours</option>
+                        <option value={1440}>1 Day</option>
+                        <option value={4320}>3 Days</option>
+                        <option value={10080}>7 Days</option>
+                      </select>
+                      <p className="text-xs text-gray-400 mt-1">Or set a custom end date below</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Custom End Date (Optional)
+                        </label>
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Custom End Time (Optional)
+                        </label>
+                        <input
+                          type="time"
+                          value={endTime}
+                          onChange={(e) => setEndTime(e.target.value)}
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Shipping */}
+                  <div className="space-y-6">
+                    <div className="border-b border-gray-600 pb-4">
+                      <h2 className="text-xl font-semibold text-white">Shipping Information</h2>
+                      <p className="text-sm text-gray-300 mt-1">Help buyers understand delivery options</p>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2">
+                        Shipping Details
+                      </label>
+                      <textarea
+                        placeholder="Describe shipping methods, costs, handling time, and any special requirements..."
+                        value={shippingInfo}
+                        onChange={(e) => setShippingInfo(e.target.value)}
+                        rows="3"
+                        className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  {errorMsg && (
+                    <div className="bg-red-900 border border-red-700 rounded-lg p-4">
+                      <p className="text-red-300 text-sm">{errorMsg}</p>
+                    </div>
+                  )}
+
+                  <div className="pt-6">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          Creating Listing...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-5 h-5" />
+                          Create Auction Listing
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
 
-            {/* Image Upload Section */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-slate-800 border-b border-slate-200 pb-2">Item Photos</h3>
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                  <Camera className="w-4 h-4" /> Upload High-Quality Images *
-                </label>
-                <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors bg-slate-50">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                    required
-                    className="w-full text-slate-700"
-                  />
-                  <p className="text-sm text-slate-500 mt-2">Upload clear, well-lit photos from multiple angles. High-quality images get more bids!</p>
+            {/* Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="bg-gray-700 rounded-lg shadow-sm border border-gray-600 p-6 sticky top-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Listing Tips</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex gap-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-200">Write detailed descriptions</p>
+                      <p className="text-gray-400">Include materials, dimensions, age, and condition details</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-200">Use high-quality photos</p>
+                      <p className="text-gray-400">Clear, well-lit images from multiple angles increase bids</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-200">Set competitive starting prices</p>
+                      <p className="text-gray-400">Lower starting bids often lead to higher final prices</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-gray-200">Choose optimal timing</p>
+                      <p className="text-gray-400">7-day auctions typically get the most attention</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 pt-6 border-t border-gray-600">
+                  <h4 className="font-medium text-gray-200 mb-2">Need Help?</h4>
+                  <p className="text-sm text-gray-400">Contact our seller support team for assistance with your listing.</p>
                 </div>
               </div>
             </div>
-
-            {/* Pricing Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-slate-800 border-b border-slate-200 pb-2">Auction Settings</h3>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                    <DollarSign className="w-4 h-4" /> Starting Bid Amount (₹) *
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="e.g., 1000"
-                    value={startBid}
-                    onChange={(e) => setStartBid(e.target.value)}
-                    required
-                    min="1"
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">Set a competitive starting price to attract bidders</p>
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                    <DollarSign className="w-4 h-4" /> Reserve Price (₹)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Optional minimum selling price"
-                    value={reservePrice}
-                    onChange={(e) => setReservePrice(e.target.value)}
-                    min="1"
-                    className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">Minimum price you'll accept (optional)</p>
-                </div>
-              </div>
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
-                  <Clock className="w-4 h-4" /> Auction Duration
-                </label>
-                <select
-                  value={duration}
-                  onChange={(e) => setDuration(Number(e.target.value))}
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value={60}>1 Hour</option>
-                  <option value={180}>3 Hours</option>
-                  <option value={360}>6 Hours</option>
-                  <option value={720}>12 Hours</option>
-                  <option value={1440}>1 Day</option>
-                  <option value={4320}>3 Days</option>
-                  <option value={10080}>7 Days</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Shipping Section */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-slate-800 border-b border-slate-200 pb-2">Shipping & Delivery</h3>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Shipping Information</label>
-                <textarea
-                  placeholder="Describe shipping options, costs, handling time, and any special requirements..."
-                  value={shippingInfo}
-                  onChange={(e) => setShippingInfo(e.target.value)}
-                  rows="3"
-                  className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            {errorMsg && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-700 text-sm">{errorMsg}</p>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="pt-6">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Creating Auction...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="w-5 h-5" />
-                    List Item for Auction
-                  </>
-                )}
-              </button>
-              <p className="text-xs text-slate-500 text-center mt-2">
-                By listing this item, you agree to our terms of service and seller policies.
-              </p>
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
       </div>
     </>
   );
