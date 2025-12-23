@@ -16,6 +16,8 @@ const Form = () => {
   const [startBid, setStartBid] = useState('');
   const [reservePrice, setReservePrice] = useState('');
   const [duration, setDuration] = useState(60);
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [shippingInfo, setShippingInfo] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +59,23 @@ const Form = () => {
       );
 
       const imageURL = cloudRes.data.secure_url;
-      const endTime = Timestamp.fromDate(new Date(Date.now() + duration * 60000));
+      const now = new Date();
+      let auctionEndTime;
+      
+      if (endDate && endTime) {
+        // Use custom date/time if provided
+        auctionEndTime = new Date(`${endDate}T${endTime}`);
+        if (auctionEndTime <= now) {
+          setErrorMsg('End date and time must be in the future.');
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        // Use duration if no custom date/time
+        auctionEndTime = new Date(now.getTime() + duration * 60000);
+      }
+      
+      const endTimeTimestamp = Timestamp.fromDate(auctionEndTime);
 
       await addDoc(collection(db, 'auctions'), {
         title,
@@ -70,7 +88,7 @@ const Form = () => {
         currentBid: Number(startBid),
         currentBidder: '',
         bidCount: 0,
-        endTime,
+        endTime: endTimeTimestamp,
         shippingInfo,
         status: 'active',
         createdBy: user.uid,
@@ -86,6 +104,8 @@ const Form = () => {
       setStartBid('');
       setReservePrice('');
       setDuration(60);
+      setEndDate('');
+      setEndTime('');
       setShippingInfo('');
       
       setShowSuccess(true);
@@ -283,7 +303,7 @@ const Form = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-200 mb-2">
-                        Auction Duration
+                        Auction Duration (Quick Setup)
                       </label>
                       <select
                         value={duration}
@@ -298,6 +318,34 @@ const Form = () => {
                         <option value={4320}>3 Days</option>
                         <option value={10080}>7 Days</option>
                       </select>
+                      <p className="text-xs text-gray-400 mt-1">Or set a custom end date below</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Custom End Date (Optional)
+                        </label>
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Custom End Time (Optional)
+                        </label>
+                        <input
+                          type="time"
+                          value={endTime}
+                          onChange={(e) => setEndTime(e.target.value)}
+                          className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
                     </div>
                   </div>
 
